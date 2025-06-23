@@ -31,6 +31,54 @@ class _MyAppState extends State<Oraz> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController timeController = TextEditingController();
 
+  // Date picker function
+  Future<void> _selectDate(
+    BuildContext context,
+    StateSetter setModalState,
+  ) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: isDark ? ThemeData.dark() : ThemeData.light(),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      setModalState(() {
+        dateController.text =
+            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+      });
+    }
+  }
+
+  // Time picker function
+  Future<void> _selectTime(
+    BuildContext context,
+    StateSetter setModalState,
+  ) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: isDark ? ThemeData.dark() : ThemeData.light(),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      setModalState(() {
+        timeController.text =
+            "${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}";
+      });
+    }
+  }
+
   void _showModalBottomSheet(BuildContext context) {
     bool isImportant = false;
 
@@ -103,11 +151,14 @@ class _MyAppState extends State<Oraz> {
                     SizedBox(height: 8),
                     TextField(
                       controller: dateController,
+                      readOnly: true,
+                      onTap: () => _selectDate(context, setModalState),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        labelText: 'Date (2025-06-23)',
+                        labelText: 'Select Date',
+                        suffixIcon: Icon(Icons.calendar_today),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -124,11 +175,14 @@ class _MyAppState extends State<Oraz> {
                     SizedBox(height: 8),
                     TextField(
                       controller: timeController,
+                      readOnly: true,
+                      onTap: () => _selectTime(context, setModalState),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        labelText: 'Time (14:30)',
+                        labelText: 'Select Time',
+                        suffixIcon: Icon(Icons.access_time),
                       ),
                     ),
                     const SizedBox(height: 16),
