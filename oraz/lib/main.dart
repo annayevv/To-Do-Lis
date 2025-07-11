@@ -107,7 +107,6 @@ class _MyAppState extends State<Oraz> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // Handle bar
                     Container(
                       width: 40,
                       height: 4,
